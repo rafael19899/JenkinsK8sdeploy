@@ -23,10 +23,21 @@ jobs:
           pip install pykwalify
 
       - name: Run yamllint
-        run: yamllint .
+        run: |
+          yamllint .
+          if [ $? -ne 0 ]; then
+            echo "YAML Linting errors found:"
+            yamllint .
+            exit 1
+          fi
 
       - name: Run pykwalify
         run: |
           for file in $(find . -name "*.yaml" -or -name "*.yml"); do
-            pykwalify -d "$file" -s .github/schemas/schema.yaml
+            pykwalify -d "$file" -s .github/schemas/schema.yaml || true
+            if [ $? -ne 0 ]; then
+              echo "YAML Validation errors found in $file"
+              pykwalify -d "$file" -s .github/schemas/schema.yaml
+              exit 1
+            fi
           done
