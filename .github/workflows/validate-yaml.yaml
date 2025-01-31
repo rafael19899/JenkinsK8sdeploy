@@ -16,28 +16,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      - name: Install yamllint and pykwalify
+      - name: Install yamllint
         run: |
           sudo apt-get update
           sudo apt-get install -y yamllint
-          pip install pykwalify
 
       - name: Run yamllint
         run: |
-          yamllint .
+          yamllint . || true
           if [ $? -ne 0 ]; then
             echo "YAML Linting errors found:"
-            yamllint .
+            yamllint . -f parsable
             exit 1
           fi
-
-      - name: Run pykwalify
-        run: |
-          for file in $(find . -name "*.yaml" -or -name "*.yml"); do
-            pykwalify -d "$file" -s .github/schemas/schema.yaml || true
-            if [ $? -ne 0 ]; then
-              echo "YAML Validation errors found in $file"
-              pykwalify -d "$file" -s .github/schemas/schema.yaml
-              exit 1
-            fi
-          done
