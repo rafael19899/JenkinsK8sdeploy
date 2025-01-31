@@ -1,0 +1,54 @@
+type: map
+mapping:
+  apiVersion:
+    type: str
+  kind:
+    type: str
+  metadata:
+    type: map
+    mapping:
+      name:
+        type: str
+  spec:
+    type: map
+    mapping:
+      replicas:
+        type: int
+      selector:
+        type: map
+        mapping:
+          matchLabels:
+            type: map
+            mapping:
+              app:
+                type: str
+      template:
+        type: map
+        mapping:
+          metadata:
+            type: map
+            mapping:
+              labels:
+                type: map
+                mapping:
+                  app:
+                    type: str
+          spec:
+            type: map
+            mapping:
+              containers:
+                type: seq
+                sequence:
+                  - type: map
+                    mapping:
+                      name:
+                        type: str
+                      image:
+                        type: str
+                      ports:
+                        type: seq
+                        sequence:
+                          - type: map
+                            mapping:
+                              containerPort:
+                                type: int
