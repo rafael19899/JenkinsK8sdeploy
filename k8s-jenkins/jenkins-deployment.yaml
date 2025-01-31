@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-blue
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: node-app
+        image: your-node-app-image:blue
+        ports:
+        - containerPort: 8300
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-green
+spec:
+  replicas: 2
+  template:
+    spec:
+      containers:
+      - name: node-app
+        image: your-node-app-image:green
+        ports:
+        - containerPort: 8300
+
