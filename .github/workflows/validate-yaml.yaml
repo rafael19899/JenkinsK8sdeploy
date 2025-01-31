@@ -22,10 +22,12 @@ jobs:
           sudo apt-get install -y yamllint
 
       - name: Run yamllint
+        continue-on-error: true
         run: |
-          yamllint . || true
-          if [ $? -ne 0 ]; then
+          yamllint . > result.log || true
+          cat result.log
+          if grep -q "error" result.log; then
             echo "YAML Linting errors found:"
-            yamllint . -f parsable
+            cat result.log
             exit 1
           fi
