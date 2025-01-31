@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -20,4 +19,5 @@ spec:
         image: your-node-app-image:blue
         ports:
         - containerPort: 8300
+
 
