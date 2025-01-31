@@ -1,0 +1,32 @@
+name: Validate YAML files
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  yamllint:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Install yamllint and pykwalify
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y yamllint
+          pip install pykwalify
+
+      - name: Run yamllint
+        run: yamllint .
+
+      - name: Run pykwalify
+        run: |
+          for file in $(find . -name "*.yaml" -or -name "*.yml"); do
+            pykwalify -d "$file" -s /path/to/schema.yaml
+          done
