@@ -1,28 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: node-app-blue
+  name: jenkins
+  namespace: jenkins
 spec:
-  replicas: 2
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
   template:
+    metadata:
+      labels:
+        app: jenkins
     spec:
       containers:
-      - name: node-app
-        image: your-node-app-image:blue
+      - name: jenkins
+        image: jenkins/jenkins:lts
         ports:
-        - containerPort: 8300
----
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: node-app-green
-spec:
-  replicas: 2
-  template:
-    spec:
-      containers:
-      - name: node-app
-        image: your-node-app-image:green
-        ports:
-        - containerPort: 8300
-
+        - containerPort: 8080
+        - containerPort: 50000
