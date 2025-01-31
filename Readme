@@ -1,0 +1,152 @@
+# Node.js App Deployment on Kubernetes
+
+## Introduction
+This project demonstrates the deployment of a Node.js application on a Kubernetes cluster, featuring a blue-green deployment strategy. The goal is to ensure zero-downtime deployments and provide an automated setup process.
+
+## Prerequisites
+Before you begin, ensure you have the following tools and technologies installed:
+- Node.js
+- Docker
+- Kubernetes (e.g., Minikube, kind, EKS, AKS, GKE, etc.)
+- Helm
+- Git
+
+## Project Structure
+The project consists of the following files and directories:
+- `README.md`: This file, providing detailed instructions and information.
+- `setup.sh`: A shell script to automate the setup process.
+- `k8s-jenkins/`: Directory containing Kubernetes configuration files.
+  - `blue-deployment.yaml`: Configuration for the blue environment deployment.
+  - `green-deployment.yaml`: Configuration for the green environment deployment.
+  - `service.yaml`: Configuration for the service to switch traffic between blue and green environments.
+- `nodejs-app/`: Directory containing the Node.js application files.
+  - `Dockerfile`: Dockerfile to build the Node.js application image.
+  - `src/`: Directory containing the source code.
+    - `app.js`: Entry point of the Node.js application.
+  - `package.json`: Node.js application dependencies and scripts.
+
+## Setup Instructions
+
+### Node.js Application
+1. Navigate to the `nodejs-app` directory.
+    ```sh
+    cd nodejs-app
+    ```
+2. Build the Docker image:
+    ```sh
+    docker build -t your-node-app-image:blue .
+    ```
+3. Tag and push the image to your container registry (e.g., Docker Hub):
+    ```sh
+    docker tag your-node-app-image:blue your-dockerhub-username/your-node-app-image:blue
+    docker push your-dockerhub-username/your-node-app-image:blue
+    ```
+4. Repeat the above steps for the green deployment, replacing `blue` with `green`.
+
+### Kubernetes Cluster
+1. Start Minikube:
+    ```sh
+    minikube start
+    ```
+2. Install Helm:
+    Follow instructions on the [Helm website](https://helm.sh/docs/intro/install/).
+
+3. Deploy Jenkins on Kubernetes using Helm:
+    ```sh
+    helm repo add jenkins https://charts.jenkins.io
+    helm repo update
+    helm install jenkins jenkins/jenkins
+    ```
+
+### Blue-Green Deployment
+1. Apply the blue deployment configuration:
+    ```sh
+    kubectl apply -f k8s-jenkins/blue-deployment.yaml
+    ```
+2. Apply the green deployment configuration:
+    ```sh
+    kubectl apply -f k8s-jenkins/green-deployment.yaml
+    ```
+3. Apply the service configuration:
+    ```sh
+    kubectl apply -f k8s-jenkins/service.yaml
+    ```
+
+## Automation Script
+To automate the entire setup process, run the `setup.sh` script:
+```sh
+./setup.sh
+
+Instalação de Prometheus
+Adicionar o repositório de Helm para Prometheus:
+
+sh
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+Instalar Prometheus usando Helm:
+
+sh
+helm install prometheus prometheus-community/prometheus --namespace monitoring --create-namespace
+Instalação de Grafana
+Adicionar o repositório de Helm para Grafana:
+
+sh
+helm repo add grafana https://grafana.github.io/helm-charts
+helm repo update
+Instalar Grafana usando Helm:
+
+sh
+helm install grafana grafana/grafana --namespace monitoring
+Configuração de Prometheus e Grafana
+Acessar o Prometheus
+Verificar os pods em execução:
+
+sh
+kubectl get pods -n monitoring
+Encaminhar a porta para acessar o Prometheus:
+
+sh
+kubectl port-forward -n monitoring <prometheus-pod-name> 8300:9090
+Acesse Prometheus em http://localhost:8300.
+
+Acessar o Grafana
+Verificar a senha do admin Grafana:
+
+sh
+kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+Encaminhar a porta para acessar o Grafana:
+
+sh
+kubectl port-forward -n monitoring svc/grafana 8300:3000
+Acesse Grafana em http://localhost:8300 e faça login com usuário admin e a senha recuperada.
+
+Adicionar Prometheus como Fonte de Dados no Grafana
+Adicionar Fonte de Dados:
+
+No Grafana, vá até a configuração (ícone de engrenagem) e selecione "Data Sources".
+
+Adicione uma nova fonte de dados e selecione "Prometheus".
+
+Configure a URL da fonte de dados como http://prometheus-server:80.
+
+Importar Dashboard Predefinido no Grafana
+Importar Dashboard:
+
+No Grafana, vá até o "+" na barra lateral e selecione "Import".
+
+Digite o ID de um dashboard predefinido (por exemplo, ID: 3119 para Kubernetes cluster monitoring).
+
+Configure a fonte de dados para Prometheus e importe.
+
+/
+├── README.md
+├── setup.sh
+├── k8s-jenkins/
+│   ├── blue-deployment.yaml
+│   ├── green-deployment.yaml
+│   └── service.yaml
+└── nodejs-app/
+    ├── Dockerfile
+    ├── src/
+    │   └── app.js
+    └── package.json
