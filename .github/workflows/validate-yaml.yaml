@@ -24,10 +24,9 @@ jobs:
       - name: Run yamllint
         continue-on-error: true
         run: |
-          yamllint . > result.log || true
-          cat result.log
-          if grep -q "error" result.log; then
+          yamllint . || true
+          if [ $? -ne 0 ]; then
             echo "YAML Linting errors found:"
-            cat result.log
+            yamllint . -f parsable
             exit 1
           fi
