@@ -28,5 +28,5 @@ jobs:
       - name: Run pykwalify
         run: |
           for file in $(find . -name "*.yaml" -or -name "*.yml"); do
-            pykwalify -d "$file" -s /path/to/schema.yaml
+            pykwalify -d "$file" -s .github/schemas/schema.yaml
           done
