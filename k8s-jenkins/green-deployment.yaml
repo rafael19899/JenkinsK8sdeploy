@@ -19,4 +19,3 @@ spec:
         image: your-node-app-image:green
         ports:
         - containerPort: 8300
-
