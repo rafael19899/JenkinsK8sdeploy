@@ -19,5 +19,3 @@ spec:
         image: your-node-app-image:blue
         ports:
         - containerPort: 8300
-
-
